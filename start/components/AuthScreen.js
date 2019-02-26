@@ -28,6 +28,7 @@ export class AuthScreen extends React.Component {
   
   async tryToLogin() {
     const { username, password } = this.state
+    const { onLoggedIn } = this.props
 
     if (!username) return this.showError('need username')
     if (!password) return this.showError('need password')
@@ -37,11 +38,12 @@ export class AuthScreen extends React.Component {
         
     if (!response.success) 
       return this.showError('login failed, check credentials')
-    else console.log(response)
+    else onLoggedIn(response.user)
   }
 
   async tryToRegister() {
     const { username, password, repeatPassword } = this.state
+    const { onLoggedIn } = this.props
 
     if (!username) return this.showError('need username')
     if (!password) return this.showError('need password')
@@ -52,7 +54,7 @@ export class AuthScreen extends React.Component {
     
     if (!response.success)
       return this.showError('registration failed, maybe username taken')
-    else console.log(response)
+    else onLoggedIn(response.user)
   }
 
   async showError(msg) {

@@ -170,12 +170,12 @@ export class ThinkerSDK {
   }
 
   _setUser(user) {
-    this._storage.setItem('thinker-user', JSON.stringify(user))
+    this._storage.setItem('thinker-user', JSON.stringify(user) || '')
     this._user = user
   }
 
   _setToken(token) {
-    this._storage.setItem('thinker-token', token)
+    this._storage.setItem('thinker-token', token || '')
     this._token = token
   }
 

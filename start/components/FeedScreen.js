@@ -8,13 +8,15 @@ import s from './FeedScreen.styles'
 
 export class FeedScreen extends React.Component {
 
+  state = {}
+
   render() {
     const { newThoughtText, thoughts, loading, submitting, keyboardHeight } = this.state
 
     return (
       <View style={{ ...s.container, paddingBottom: keyboardHeight }}>
         <View style={s.feedContainer}>
-          feed
+          <Text> feed </Text>
         </View>
         <View style={s.newThoughtContainer}>
           <Text style={s.newThoughtTitle}>
