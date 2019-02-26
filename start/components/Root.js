@@ -27,10 +27,13 @@ export class Root extends React.PureComponent {
           auth.state === 'LOADING' ? (
             <ActivityIndicator/>
           ) : auth.state === 'LOGGED-IN' ? (
-            <Navbar 
-              loggedInUser={auth.user}
-              onLogout={() => this.setState({ user: null })}
-            />
+            <>
+              <Navbar 
+                loggedInUser={auth.user}
+                onLogout={() => this.setState({ user: null })}
+              />
+              <FeedScreen/>
+            </>
           ) : (
             <AuthScreen 
               onLoggedIn={user => this.setState({ user })}

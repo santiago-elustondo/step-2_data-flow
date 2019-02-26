@@ -7,7 +7,8 @@ export default StyleSheet.create({
     flexDirection: 'column'
   },
   feedContainer: {
-    flex: 1
+    flex: 1,
+    height: 400
   },
   feedSpinner: {
     marginTop: 50

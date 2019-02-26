@@ -1,5 +1,5 @@
 import React from 'react'
-import {  View, Text, TextInput, Button, FlatList, Keyboard } from 'react-native'
+import {  View, Text, TextInput, Button, FlatList, Keyboard, ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 
 import { thinker } from '../thinker-sdk.singleton'
 import { LoadingSpinner } from './LoadingSpinner'
@@ -8,15 +8,57 @@ import s from './FeedScreen.styles'
 
 export class FeedScreen extends React.Component {
 
-  state = {}
+  state = {
+    thoughts: null,
+    newThoughtText: ''
+  }
+
+  thoughtHandler = thoughts => this.setState({ thoughts })
+
+  componentDidMount() {
+    thinker.subscribeToThoughts(this.thoughtHandler)
+    this.keyboardDidHideListener 
+      = Keyboard.addListener('keyboardDidHide', () => this.setState({ keyboardOpen: false }))
+    this.keyboardDidShowListener 
+      = Keyboard.addListener('keyboardDidShow', () => this.setState({ keyboardOpen: true }))
+  }
+
+  componentWillUnmount() {
+    thinker.unsubscribeToThoughts(this.thoughtHandler)
+    this.keyboardDidHideListener.remove()
+    this.keyboardDidShowListener.remove()
+  }
+
+  async submit() {
+    const { thoughts, newThoughtText } = this.state
+    this.setState({ 
+      newThoughtText: '',
+      submitting: true
+    })
+    const thought = await thinker.addThought({ content: newThoughtText })
+    this.setState({ 
+      submitting: false,
+      thoughts: [ thought ].concat(thoughts)
+    })
+  }
 
   render() {
-    const { newThoughtText, thoughts, loading, submitting, keyboardHeight } = this.state
+    const { newThoughtText, submitting, thoughts, keyboardHeight } = this.state
 
     return (
-      <View style={{ ...s.container, paddingBottom: keyboardHeight }}>
+      <KeyboardAvoidingView style={{ ...s.container, paddingBottom: keyboardHeight }} behavior="padding" enabled>
         <View style={s.feedContainer}>
-          <Text> feed </Text>
+          {
+            thoughts ? (
+              <FlatList
+                data={thoughts}
+                keyExtractor={item => item._id}
+                renderItem={({ item }) => <ThoughtCard thought={item}/>}
+              />
+            ) : (
+              <ActivityIndicator/>
+            )
+          }
         </View>
         <View style={s.newThoughtContainer}>
           <Text style={s.newThoughtTitle}>
@@ -26,13 +68,22 @@ export class FeedScreen extends React.Component {
             style={s.newThoughtInput}
             multiline={true}
             numberOfLines={2}
+            value={newThoughtText}
+            onChangeText={newThoughtText => this.setState({ newThoughtText })}
           />
-          <Button 
-            style={s.newThoughtButton} 
-            title='submit'
-          />
+          {
+            submitting ? (
+              <ActivityIndicator/>
+            ) : (
+              <Button 
+                style={s.newThoughtButton} 
+                title='submit'
+                onPress={() => this.submit()}
+              />
+            )
+          }
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
