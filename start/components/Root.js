@@ -7,8 +7,9 @@ import { AuthScreen } from './AuthScreen'
 import { Navbar } from './Navbar'
 import { FeedScreen } from './FeedScreen'
 import { LoadingSpinner } from './LoadingSpinner'
+import { Drawer } from './Drawer'
+import { Frame } from './Frame'
 import s from './Root.styles'
-
 
 export const Root = connect(
   state => ({
@@ -22,8 +23,9 @@ export const Root = connect(
         <ActivityIndicator/>
       ) : auth.state === 'LOGGED-IN' ? (
         <>
-          <Navbar/>
-          <FeedScreen/>
+          <Frame>
+            <FeedScreen/>
+          </Frame>
         </>
       ) : (
         <AuthScreen/>  
