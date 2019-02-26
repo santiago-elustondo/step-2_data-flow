@@ -3,13 +3,17 @@ import { connect } from 'react-redux'
 import { Text, View, Button, TouchableHighlight } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
+import { t } from '../transitional-redux'
 import s from './Navbar.styles'
 
 export const Navbar = connect(
   state => ({
     auth: state.auth
+  }),
+  dispatch => ({
+    openDrawer: () => dispatch(t(state => ({ drawerOpen: true })))
   })
-)(({ auth }) => 
+)(({ auth, openDrawer }) => 
   <View style={s.container}>
     <View style={s.leftSide}>
       <Text style={s.greeting}>
@@ -22,7 +26,7 @@ export const Navbar = connect(
           activeOpacity={1}
           underlayColor={'lightgray'}
           style={{ borderRadius: 10 }}
-          onPress={() => { setTimeout(() => null, 20) }}
+          onPress={() => { setTimeout(() => openDrawer(), 20) }}
         >
           <Ionicons name="md-menu" size={32} />
         </TouchableHighlight>

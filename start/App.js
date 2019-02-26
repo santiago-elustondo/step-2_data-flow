@@ -7,7 +7,8 @@ import { createTransitionalReducer, transition } from './transitional-redux'
 import { thinker } from './thinker-sdk.singleton'
 
 const initialState = {
-  auth: thinker.auth()
+  auth: thinker.auth(),
+  drawerOpen: false
 }
 
 const store = createStore(
